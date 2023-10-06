@@ -11,7 +11,7 @@
     <groupId>com.blazarbit.neo4j</groupId>
     <artifactId>blazarbit-neo4j</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>blazarbit-com.blazarbit.neo4j</name>
+    <name>blazarbit-neo4j</name>
     <description>Blazarbit Neo4j Module</description>
     <properties>
         <java.version>17</java.version>
