@@ -75,14 +75,32 @@ public class InvoiceService {
         Email requester = invoice.getRequester();
         Address receiver = invoice.getReceiver();
         Asset requestedAsset = invoice.getRequestedAsset();
+        Address payerWallet = invoice.getPayerWallet();
+        Email payerEmail = invoice.getPayerEmail();
 
         Optional<Address> addressResult = addressRepository.findByAddress(receiver.getAddress());
-        if (addressResult.isPresent())
-            invoice.setReceiver(addressResult.get());
+        if (addressResult.isPresent()) {
+            Address zoneLinkedReceiver = addressResult.get();
+//            zoneLinkedReceiver.setRelatedZone(null);
+            invoice.setReceiver(zoneLinkedReceiver);
+        }
 
         Optional<Email> emailResult = emailRepository.findByAddress(requester.getAddress());
-        if (emailResult.isPresent())
-            invoice.setRequester(emailResult.get());
+        if (emailResult.isPresent()) {
+            Email linkedRequesterEmail = emailResult.get();
+            invoice.setRequester(linkedRequesterEmail);
+        }
+
+        Optional<Address> payerAddressResult = addressRepository.findByAddress(payerWallet.getAddress());
+        if (payerAddressResult.isPresent()) {
+            Address linkedPayerWalletAddress = payerAddressResult.get();
+//            linkedPayerWalletAddress.setRelatedZone(null);
+            invoice.setPayerWallet(linkedPayerWalletAddress);
+        }
+
+        Optional<Email> payerEmailResult = emailRepository.findByAddress(payerEmail.getAddress());
+        if (payerEmailResult.isPresent())
+            invoice.setPayerEmail(payerEmailResult.get());
 
         List<Map<String, Object>> assetResult = assetRepository.findOneByDenom(requestedAsset.getDenom());
         if (assetResult.isEmpty())
@@ -90,6 +108,7 @@ public class InvoiceService {
 
         String denom = (String) assetResult.get(0).get("denom");
         Long requestedAssetId = assetRepository.findOneIdentityByDenom(denom);
+        invoice.getRequestedAsset().setLocatedZone(null);
         Invoice invoiceResult = invoiceRepository.save(invoice);
 
         invoiceRepository.createRelationship(invoiceResult.getIdentity(),requestedAssetId);

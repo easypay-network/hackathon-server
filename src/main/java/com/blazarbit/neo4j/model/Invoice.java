@@ -52,4 +52,10 @@ public class Invoice {
     private Email requester;
 
     private Asset requestedAsset;
+
+    @Relationship(type = "payerWallet", direction = Relationship.Direction.OUTGOING)
+    private Address payerWallet;
+
+    @Relationship(type = "payerEmail", direction = Relationship.Direction.OUTGOING)
+    private Email payerEmail;
 }

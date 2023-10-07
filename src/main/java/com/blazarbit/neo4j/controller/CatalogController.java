@@ -28,7 +28,7 @@ public class CatalogController {
     }
 
     @GetMapping("/products/{id}")
-    private ResponseEntity<?> findAllProducts(@PathVariable Long id){
+    private ResponseEntity<?> findProductByID(@PathVariable Long id){
         Product product = catalogService.findProductById(id);
         return ResponseEntity.ok(product);
     }

@@ -42,6 +42,12 @@ public class ShortestPathService {
             if (shortestPath.size() == 0) {
                 setTransactionType(TransactionType.TRANSFER);
                 setAddress(address);
+            } else if (shortestPath.size() == 1 && shortestPath.get(0).getEdge().getType().equalsIgnoreCase("ibcTransfer")) {
+                setTransactionType(TransactionType.IBC_TRANSFER);
+                setAddress(address);
+            } else {
+                //need to implement later
+                setAddress(address);//stub
             }
         }};
 

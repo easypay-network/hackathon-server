@@ -19,5 +19,5 @@ public class PathfinderDTO {
     private String address;
     private String feeToken;
     private Long feeAmount;
-    private Long destinationTokenAmount;
+    private Double destinationTokenAmount;
 }

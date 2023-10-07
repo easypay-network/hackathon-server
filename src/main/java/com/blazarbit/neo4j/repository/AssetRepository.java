@@ -23,6 +23,12 @@ public interface AssetRepository extends Neo4jRepository<Asset, Long> {
             "LIMIT 1")
     List<Map<String, Object>> findAssetByInvoiceId(@Param("invoiceId")Long invoiceId);
 
+    @Query("MATCH (product:product)-[:requested]->(asset) " +
+            "WHERE id(product) = $productId AND (asset:token OR asset:derivative) " +
+            "RETURN asset " +
+            "LIMIT 1")
+    List<Map<String, Object>> findAssetByProductId(@Param("productId")Long productId);
+
     @Query("MATCH (n) WHERE (n:token OR n:derivative) AND n.denom = $denom RETURN n LIMIT 1")
     List<Map<String, Object>> findOneByDenom(@Param("denom") String denom);
 

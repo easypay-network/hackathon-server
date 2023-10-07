@@ -1,10 +1,7 @@
 package com.blazarbit.neo4j.model;
 
 import lombok.Data;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.*;
 
 @Node("product")
 @Data
@@ -19,24 +16,23 @@ public class Product {
     @Property("description")
     private String description;
 
-    @Property("tokenAmount")
-    private Double tokenAmount;
-
     @Property("imageUrl")
     private String imageUrl;
 
-    @Property("recipientAddress")
-    private String recipientAddress;
+    @Property("requestedAmount")
+    private Double requestedAmount;
 
-    @Property("contractAddress")
-    private String contractAddress;
+    @Property("creationDate")
+    private String creationDate;
 
-    @Property("tokenId")
-    private String tokenId;
+    @Property("dueDate")
+    private String dueDate;
 
-    @Property("listingDatetime")
-    private String listingDatetime;
+    @Relationship(type = "receiver", direction = Relationship.Direction.OUTGOING)
+    private Address receiver;
 
-    @Property("listingUntilDatetime")
-    private String listingUntilDatetime;
+    @Relationship(type = "requester", direction = Relationship.Direction.OUTGOING)
+    private Email requester;
+
+    private Asset requestedAsset;
 }
