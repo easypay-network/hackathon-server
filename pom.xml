@@ -8,11 +8,11 @@
         <version>3.1.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.blazarbit.neo4j</groupId>
-    <artifactId>blazarbit-neo4j</artifactId>
+    <groupId>network.easypay.server</groupId>
+    <artifactId>easypay-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>blazarbit-neo4j</name>
-    <description>Blazarbit Neo4j Module</description>
+    <name>easypay-server</name>
+    <description>EasyNay Server Module</description>
     <properties>
         <java.version>17</java.version>
     </properties>

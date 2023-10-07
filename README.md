@@ -10,4 +10,4 @@ Docker build:
 
 Docker run:
 
-`docker run -p 8095:8095 -it -d easypay-server:v1`
+`docker run -p 8095:8095 --env NEO4J_URI=<uri> --env NEO4J_USERNAME=<username> --env NEO4J_PASSWORD=<pass> -it -d easypay-server:v1`

@@ -10,6 +10,6 @@ RUN mvn package -DskipTests
 
 FROM openjdk:17-jdk-slim
 
-COPY --from=build /opt/target/blazarbit-*.jar /opt/app.jar
+COPY --from=build /opt/target/easypay-*.jar /opt/app.jar
 
 CMD java -jar /opt/app.jar --spring.profiles.active=prod
