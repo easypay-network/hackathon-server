@@ -36,9 +36,9 @@ public class CatalogService {
         return products;
     }
 
-    public Optional<List<Product>> findProductsByCategory(Long categoryId) {
+    public Optional<List<Product>> findProductsByCategory(String categoryName) {
         log.info("Search products by category...");
-        Optional<List<Product>> products = productRepository.findProductsByCategory(categoryId);
+        Optional<List<Product>> products = productRepository.findProductsByCategoryName(categoryName);
         log.info(products);
 
         return products;

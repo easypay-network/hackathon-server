@@ -16,10 +16,10 @@ public interface ProductRepository extends Neo4jRepository<Product, Long> {
 
     Optional<Product> findById(Long id);
 
-    @Query("MATCH (p:product)-[:relatedCategory]->(c:category)" +
-            "WHERE id(c) = $categoryId " +
+    @Query("MATCH (p:product)-[:relatedCategory]->(c:category) " +
+            "WHERE toLower(c.name) = toLower($categoryName) " +
             "RETURN p AS product")
-    Optional<List<Product>> findProductsByCategory(@Param("categoryId")Long categoryId);
+    Optional<List<Product>> findProductsByCategoryName(@Param("categoryName")String categoryId);
 
     @Query("MATCH (p:product)-[:relatedCategory]->(c:category)" +
             "WHERE id(p) = $productId " +

@@ -34,7 +34,7 @@ public class CatalogController {
     }
 
     @GetMapping("/categories/{category}/products")
-    private ResponseEntity<?> findProductsByCategory(@PathVariable(name = "category") Long category){
+    private ResponseEntity<?> findProductsByCategory(@PathVariable(name = "category") String category){
         Optional<List<Product>> products = catalogService.findProductsByCategory(category);
         return ResponseEntity.ok(products);
     }

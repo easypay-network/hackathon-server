@@ -29,9 +29,9 @@ public class ShortestPathService {
         List<PathResult> shortestPath = getPathFromDB(sourceDenom, destinationDenom, graphName);
 
         for (PathResult item : shortestPath) {
-            Zone startZone = zoneRepository.findZoneByLocatedNode(item.getStartNode().getId());
+            Zone startZone = zoneRepository.findZoneByLocatedNodeId(item.getStartNode().getId());
             item.getStartNode().setZone(startZone);
-            Zone endZone = zoneRepository.findZoneByLocatedNode(item.getEndNode().getId());
+            Zone endZone = zoneRepository.findZoneByLocatedNodeId(item.getEndNode().getId());
             item.getEndNode().setZone(endZone);
         }
 
