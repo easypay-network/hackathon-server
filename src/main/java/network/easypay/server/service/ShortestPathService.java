@@ -39,7 +39,7 @@ public class ShortestPathService {
         }
 
         PathfinderDTO pathfinderDTO = new PathfinderDTO() {{
-            setTxMemo("Helloooo!");
+            setTxMemo("EasyPay Network - unified payment system for seamless web3!");
             setPathResults(shortestPath);
             setIbcMemo("");
             if (shortestPath.size() == 0) {
