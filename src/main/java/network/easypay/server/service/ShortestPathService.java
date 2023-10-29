@@ -48,7 +48,7 @@ public class ShortestPathService {
             setIbcMemo("");
             if (shortestPath.size() == 0) {
                 if (sourceDenom.equalsIgnoreCase(destinationDenom)) {
-                    setTransactionType(TransactionType.DIRECT_PAYMENT);
+                    setTransactionType(TransactionType.TRANSFER);
                     setAddress(address);
                     PathResult pathStep = new PathResult();
 
