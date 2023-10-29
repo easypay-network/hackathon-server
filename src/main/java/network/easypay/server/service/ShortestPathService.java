@@ -43,8 +43,12 @@ public class ShortestPathService {
             setPathResults(shortestPath);
             setIbcMemo("");
             if (shortestPath.size() == 0) {
-                setTransactionType(TransactionType.TRANSFER);
-                setAddress(address);
+                if (sourceDenom.equalsIgnoreCase(destinationDenom)) {
+                    setTransactionType(TransactionType.DIRECT_PAYMENT);
+                    setAddress(address);
+                } else {
+                    setTransactionType(TransactionType.CANNOT_FIND);
+                }
             } else if (shortestPath.size() == 1 && shortestPath.get(0).getEdge().getType().equalsIgnoreCase("ibcTransfer")) {
                 setTransactionType(TransactionType.IBC_TRANSFER);
                 setAddress(address);
