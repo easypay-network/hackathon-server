@@ -7,14 +7,17 @@ import network.easypay.server.model.graph.GraphConfig;
 import network.easypay.server.model.graph.GraphProjection;
 import network.easypay.server.model.graph.RelationshipProjection;
 import network.easypay.server.model.graph.RelationshipProperties;
+import network.easypay.server.repository.AssetRepository;
 import network.easypay.server.repository.ZoneRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.neo4j.driver.internal.InternalNode;
 import org.neo4j.driver.internal.InternalRelationship;
 import org.springframework.data.neo4j.core.Neo4jClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -24,6 +27,7 @@ import java.util.*;
 public class ShortestPathService {
     private Neo4jClient neo4jClient;
     private ZoneRepository zoneRepository;
+    private AssetRepository assetRepository;
 
     public PathfinderDTO getPathByDenoms(String sourceDenom, String destinationDenom, String address) {
         String graphName = "in-memory-graph-12345";
@@ -46,6 +50,48 @@ public class ShortestPathService {
                 if (sourceDenom.equalsIgnoreCase(destinationDenom)) {
                     setTransactionType(TransactionType.DIRECT_PAYMENT);
                     setAddress(address);
+                    PathResult pathStep = new PathResult();
+
+                    List<Map<String, Object>> sourceAssetResult = assetRepository.findOneByDenom(sourceDenom);
+                    if (sourceAssetResult.isEmpty())
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "wrong requestedAsset");
+                    pathStep.setStartNode(new NodeResult(){{
+                        setProperties(new NodePropertiesResult(){{
+                            setDenomTrace((String) sourceAssetResult.get(0).get("denomTrace"));
+                            setOriginalTicker((String) sourceAssetResult.get(0).get("originalTicker"));
+                            setDenom((String) sourceAssetResult.get(0).get("denom"));
+                            setLocalTicker((String) sourceAssetResult.get(0).get("localTicker"));
+                            setTicker((String) sourceAssetResult.get(0).get("ticker"));
+                            setLogoUrl((String) sourceAssetResult.get(0).get("logoUrl"));
+                        }});
+//                        setZone(new Zone(){{
+//                            setLogoUrl();
+//                            setName();
+//                            setNetworkId();
+//                        }});
+                    }});
+
+                    List<Map<String, Object>> targetAssetResult = assetRepository.findOneByDenom(sourceDenom);
+                    if (targetAssetResult.isEmpty())
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "wrong requestedAsset");
+                    pathStep.setEndNode(new NodeResult(){{
+                        setProperties(new NodePropertiesResult(){{
+                            setDenomTrace((String) targetAssetResult.get(0).get("denomTrace"));
+                            setOriginalTicker((String) targetAssetResult.get(0).get("originalTicker"));
+                            setDenom((String) targetAssetResult.get(0).get("denom"));
+                            setLocalTicker((String) targetAssetResult.get(0).get("localTicker"));
+                            setTicker((String) targetAssetResult.get(0).get("ticker"));
+                            setLogoUrl((String) targetAssetResult.get(0).get("logoUrl"));
+                        }});
+                    }});
+
+                    pathStep.setEdge(new RelationshipResult(){{
+                        setType("directPayment");
+                    }});
+                    pathStep.setEdgeCost(0.0);
+                    setPathResults(new ArrayList<>(){{
+                        add(pathStep);
+                    }});
                 } else {
                     setTransactionType(TransactionType.CANNOT_FIND);
                 }
