@@ -19,18 +19,29 @@ public class InvoiceController {
     @GetMapping()
     private List<Invoice> findAll(
             @RequestParam(name = "requesterEmail", required = false) String requesterEmail,
-            @RequestParam(name = "requesterWalletAddress", required = false) String requesterWalletAddress){
+            @RequestParam(name = "requesterWalletAddress", required = false) List<String> requesterWalletAddress){
         List<Invoice> invoices = invoiceService.findAll();
         for (Invoice invoice : invoices) {
-            if (invoice.getReceiver() != null && invoice.getReceiver().getAddress() != null && invoice.getReceiver().getAddress().equalsIgnoreCase(requesterWalletAddress))
+            if (invoice.getReceiver() != null && invoice.getReceiver().getAddress() != null
+                    && containsAddressIgnoreCase(requesterWalletAddress, invoice.getReceiver().getAddress())
+            ) {
                 invoice.setDirection(Invoice.Direction.OUTGOING);
+            }
             else if (invoice.getRequester() != null && invoice.getRequester().getAddress() != null &&
                     (invoice.getRequester().getAddress().equalsIgnoreCase(requesterEmail) ||
-                    invoice.getRequester().getAddress().equalsIgnoreCase(requesterWalletAddress)))
+                      containsAddressIgnoreCase(requesterWalletAddress, invoice.getRequester().getAddress())
+                    ))
                 invoice.setDirection(Invoice.Direction.NEUTRAL);
             else invoice.setDirection(Invoice.Direction.INCOMING);
         }
         return invoices;
+    }
+
+    private boolean containsAddressIgnoreCase(List<String> addresses, String address) {
+        if (addresses == null || address == null) {
+            return false;
+        }
+        return addresses.stream().anyMatch(s -> s.equalsIgnoreCase(address));
     }
 
     @GetMapping("/{id}")
